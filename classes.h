@@ -148,23 +148,19 @@ public:
     Data() {
         // ID, Name, Max Hours
         teachers.push_back(Teacher(0, "Teacher1", 20));
-        teachers.push_back(Teacher(1, "Teacher2", 20));
+        teachers.push_back(Teacher(1, "Teacher2", 30));
         teachers.push_back(Teacher(2, "Teacher3", 20));
-        teachers.push_back(Teacher(3, "Teacher4", 20));
+        teachers.push_back(Teacher(3, "Teacher4", 10));
         teachers.push_back(Teacher(4, "Teacher5", 20));
-        teachers.push_back(Teacher(5, "Teacher6", 20));
 
         // Id, Name, Lecture Hours, Lab Hours, Teachers
-        Course course1(1, "Course1", 4, 2, { teachers[2], teachers[1] });
-        Course course2(2, "Course2", 1, 1, { teachers[0], teachers[1] });
-        Course course3(3, "Course3", 2, 2, { teachers[4] });
-        Course course4(4, "Course4", 0, 1, { teachers[0] });
-        Course course5(5, "Course5", 3, 0, { teachers[4], teachers[2] });
-        Course course6(6, "Course6", 1, 1, { teachers[0], teachers[3] });
-        Course course7(7, "Course7", 1, 2, { teachers[0], teachers[5] });
-        Course course8(8, "Course8", 2, 0, { teachers[3], teachers[4] });
-        Course course9(9, "Course9", 0, 1, { teachers[0], teachers[5] });
-        Course course10(10, "Course10", 2, 2, { teachers[3], teachers[5] });
+        Course course1(1, "Course1", 5, 2, {teachers[1], teachers[0], teachers[4]});
+        Course course2(2, "Course2", 1, 0, {teachers[1]});
+        Course course3(3, "Course3", 2, 2, {teachers[4], teachers[2]});
+        Course course4(4, "Course4", 0, 1, {teachers[0], teachers[3], teachers[2]});
+        Course course5(5, "Course5", 2, 1, {teachers[4], teachers[2]});
+        Course course6(6, "Course6", 1, 2, {teachers[3]});
+        Course course7(7, "Course7", 3, 1, {teachers[0], teachers[4]});
 
         // All Courses
         courses.push_back(course1);
@@ -174,22 +170,19 @@ public:
         courses.push_back(course5);
         courses.push_back(course6);
         courses.push_back(course7);
-        courses.push_back(course8);
-        courses.push_back(course9);
-        courses.push_back(course10);
 
         // Courses by Groups
         // Id, Name, Students in First Group, Students in Second Group, Courses
-        std::vector<Course> group1Courses = { course1, course2 };
+        std::vector<Course> group1Courses = { course2, course3, course5 };
         Group group1(1, "Group1", 12, 13, group1Courses);
 
-        std::vector<Course> group2Courses = { course1, course3, course4, course5, course6 };
+        std::vector<Course> group2Courses = { course4, course6, course7, course2 };
         Group group2(2, "Group2", 11, 10, group2Courses);
 
-        std::vector<Course> group3Courses = { course1, course2, course3, course10 };
+        std::vector<Course> group3Courses = { course1, course6 };
         Group group3(3, "Group3", 7, 8, group3Courses);
 
-        std::vector<Course> group4Courses = { course5, course6, course7, course8, course10 };
+        std::vector<Course> group4Courses = { course5, course6, course7, course1 };
         Group group4(4, "Group4", 14, 14, group4Courses);
 
         groups.push_back(group1);
@@ -203,10 +196,8 @@ public:
         auditoriums.push_back(Auditorium(2, 20));
         auditoriums.push_back(Auditorium(3, 35));
         auditoriums.push_back(Auditorium(4, 80));
-        auditoriums.push_back(Auditorium(5, 20));
+        auditoriums.push_back(Auditorium(5, 30));
         auditoriums.push_back(Auditorium(6, 50));
-        auditoriums.push_back(Auditorium(7, 30));
-        auditoriums.push_back(Auditorium(8, 45));
     }
 };
 

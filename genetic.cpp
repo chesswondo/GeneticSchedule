@@ -141,7 +141,6 @@ int main() {
             std::cout << "The Best Schedule:\n\n";
             bestSchedule.print(); 
 
-            std::cout << "--------------------------------------" << std::endl;
             return 0;
         }
         
