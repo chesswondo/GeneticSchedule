@@ -99,14 +99,14 @@ public:
     }
 };
 
-// Class for auditorium
-class Auditorium {
+// Class for room
+class Room {
 public:
-    int auditoriumId;
+    int roomId;
     int maxStudents;
 
-    Auditorium(int auditoriumId, int maxStudents) {
-        this->auditoriumId = auditoriumId;
+    Room(int roomId, int maxStudents) {
+        this->roomId = roomId;
         this->maxStudents = maxStudents;
     }
 };
@@ -119,7 +119,7 @@ public:
     bool isLecture;
     int meetingTime;
     int courseId;
-    int auditoriumId;
+    int roomId;
 
     // Function to get time in readable way (day/class number)
     std::pair<int, int> getTime() const {
@@ -127,13 +127,13 @@ public:
     }
 
     // Constructor
-    Meeting(int teacherId, int groupId, int courseId, bool isLecture, int meetingTime, int auditoriumId) {
+    Meeting(int teacherId, int groupId, int courseId, bool isLecture, int meetingTime, int roomId) {
         this->teacherId = teacherId;
         this->groupId = groupId;
         this->courseId = courseId;
         this->isLecture = isLecture;
         this->meetingTime = meetingTime;
-        this->auditoriumId = auditoriumId;
+        this->roomId = roomId;
     }
 };
 
@@ -143,7 +143,7 @@ public:
     std::vector<Teacher> teachers;
     std::vector<Group> groups;
     std::vector<Course> courses;
-    std::vector<Auditorium> auditoriums;
+    std::vector<Room> rooms;
 
     Data() {
         // ID, Name, Max Hours
@@ -190,19 +190,19 @@ public:
         groups.push_back(group3);
         groups.push_back(group4);
 
-        // Auditoriums
+        // Rooms
         // Number, Max Students
-        auditoriums.push_back(Auditorium(1, 40));
-        auditoriums.push_back(Auditorium(2, 20));
-        auditoriums.push_back(Auditorium(3, 35));
-        auditoriums.push_back(Auditorium(4, 80));
-        auditoriums.push_back(Auditorium(5, 30));
-        auditoriums.push_back(Auditorium(6, 50));
+        rooms.push_back(Room(1, 40));
+        rooms.push_back(Room(2, 20));
+        rooms.push_back(Room(3, 35));
+        rooms.push_back(Room(4, 80));
+        rooms.push_back(Room(5, 30));
+        rooms.push_back(Room(6, 50));
     }
 };
 
 // Helper functions
-int findMaxStudents(const std::vector<Auditorium>& auditoriums, int auditoriumId);
+int findMaxStudents(const std::vector<Room>& rooms, int roomId);
 int findGroupStudents(const std::vector<Group>& groups, int groupId);
 std::string groupNameById(const std::vector<Group>& groups, int groupId);
 std::string teacherNameById(const std::vector<Teacher>& teachers, int teacherId);
@@ -237,13 +237,13 @@ public:
                     int randomTeacherIndex = rand() % course.teachers.size();
                     Teacher selectedTeacher = course.teachers[randomTeacherIndex];
 
-                    // Random auditorium
-                    int randomAuditoriumIndex = rand() % data.auditoriums.size();
-                    Auditorium selectedAuditorium = data.auditoriums[randomAuditoriumIndex];
+                    // Random room
+                    int randomRoomIndex = rand() % data.rooms.size();
+                    Room selectedRoom = data.rooms[randomRoomIndex];
 
-                    // Random lecture with selected teacher, auditorium, course, group
+                    // Random lecture with selected teacher, room, course, group
                     int randomMeetingTime = rand() % TIME_SLOTS;
-                    Meeting meeting(selectedTeacher.id, group.id, course.id, true, randomMeetingTime, selectedAuditorium.auditoriumId);
+                    Meeting meeting(selectedTeacher.id, group.id, course.id, true, randomMeetingTime, selectedRoom.roomId);
                     meetings.push_back(meeting);
                     numClasses++;
                 }
@@ -254,13 +254,13 @@ public:
                     int randomTeacherIndex = rand() % course.teachers.size();
                     Teacher selectedTeacher = course.teachers[randomTeacherIndex];
 
-                    // Random auditorium
-                    int randomAuditoriumIndex = rand() % data.auditoriums.size();
-                    Auditorium selectedAuditorium = data.auditoriums[randomAuditoriumIndex];
+                    // Random room
+                    int randomRoomIndex = rand() % data.rooms.size();
+                    Room selectedRoom = data.rooms[randomRoomIndex];
 
                     // Random laboratory with selected teacher, course, group
                     int randomMeetingTime = rand() % TIME_SLOTS;
-                    Meeting meeting(selectedTeacher.id, group.id, course.id, false, randomMeetingTime, selectedAuditorium.auditoriumId);
+                    Meeting meeting(selectedTeacher.id, group.id, course.id, false, randomMeetingTime, selectedRoom.roomId);
                     meetings.push_back(meeting);
                     numClasses++;
                 }
@@ -282,7 +282,7 @@ public:
         std::unordered_map<int, std::unordered_set<int>> teacherLectureSlots;
         std::unordered_map<int, std::unordered_set<int>> teacherLabSlots;
         std::unordered_map<int, std::unordered_set<int>> groupSlots;
-        std::unordered_map<int, std::unordered_set<int>> auditoriumSlots;
+        std::unordered_map<int, std::unordered_set<int>> roomSlots;
         std::unordered_map<int, int> teacherTeachingHours;
 
         for (const auto& meeting : meetings) {
@@ -290,15 +290,15 @@ public:
             if (!groupSlots[meeting.groupId].insert(meeting.meetingTime).second) {
                 numConflicts += GROUP_SPLIT_PENALTY;
             }
-            // Several meetings in the same auditorium
-            if (!auditoriumSlots[meeting.auditoriumId].insert(meeting.meetingTime).second) {
+            // Several meetings in the same room
+            if (!roomSlots[meeting.roomId].insert(meeting.meetingTime).second) {
                 numConflicts += AUDITORIUM_SPLIT_PENALTY;
             }
-            // Auditorium overflow
+            // Room overflow
             int groupId = meeting.groupId;
-            int auditoriumId = meeting.auditoriumId;
+            int roomId = meeting.roomId;
             int groupStudents = findGroupStudents(data.groups, groupId);
-            int maxStudents = findMaxStudents(data.auditoriums, auditoriumId);
+            int maxStudents = findMaxStudents(data.rooms, roomId);
 
             if (maxStudents < groupStudents) {
                 numConflicts += AUDITORIUM_OVERFLOW_PENALTY;
@@ -377,7 +377,7 @@ public:
                 << ", Group: " << groupNameById(data.groups, meeting.groupId)
                 << ", Course: " << courseNameById(data.courses, meeting.courseId)
                 << ", Class Type: " << (meeting.isLecture ? "Lec" : "Lab")
-                << ", Auditorium: " << meeting.auditoriumId << std::endl;
+                << ", Room: " << meeting.roomId << std::endl;
         }
     }
 };

@@ -14,17 +14,17 @@
 #include "constants.h"
 #include "classes.h"
 
-// Find max students by auditorium number
-int findMaxStudents(const std::vector<Auditorium>& auditoriums, int auditoriumId) {
-    auto it = std::find_if(auditoriums.begin(), auditoriums.end(),
-        [auditoriumId](const Auditorium& a) {
-            return a.auditoriumId == auditoriumId;
+// Find max students by room number
+int findMaxStudents(const std::vector<Room>& rooms, int roomId) {
+    auto it = std::find_if(rooms.begin(), rooms.end(),
+        [roomId](const Room& a) {
+            return a.roomId == roomId;
         });
 
-    if (it != auditoriums.end()) {
+    if (it != rooms.end()) {
         return it->maxStudents;
     }
-    throw std::runtime_error("Auditorium ID not found");
+    throw std::runtime_error("Room ID not found");
 }
 
 // Find number of students in group by its id
