@@ -211,7 +211,7 @@ std::string courseNameById(const std::vector<Course>& courses, int courseId);
 class Schedule {
 public:
     std::vector<Meeting> meetings;
-    double accordanceValue;
+    double fitnessValue;
     int numClasses;
     double numConflicts;
     Data data;
@@ -224,7 +224,7 @@ public:
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
         std::srand(seed);
 
-        accordanceValue = 0;
+        fitnessValue = 0;
         numClasses = 0;
         numConflicts = 0;
 
@@ -268,11 +268,11 @@ public:
         }
     }
 
-    // Calculate overall accordance (the closer to 1, the better)
-    double calculateAccordance(Data& data) {
+    // Calculate overall fitness (the closer to 1, the better)
+    double calculateFitness(Data& data) {
         double conflicts = static_cast<double>(calculateConflicts(data));
-        accordanceValue = 1 / (1 + conflicts);
-        return accordanceValue;
+        fitnessValue = 1 / (1 + conflicts);
+        return fitnessValue;
     }
 
     // Calculate total number of conflicts based on given criteria
@@ -376,8 +376,8 @@ public:
                 << ", Teacher: " << teacherNameById(data.teachers, meeting.teacherId)
                 << ", Group: " << groupNameById(data.groups, meeting.groupId)
                 << ", Course: " << courseNameById(data.courses, meeting.courseId)
-                << ", Class Type: " << (meeting.isLecture ? "Lecture" : "Laboratory")
-                << ", Auditorium number: " << meeting.auditoriumId << std::endl;
+                << ", Class Type: " << (meeting.isLecture ? "Lec" : "Lab")
+                << ", Auditorium: " << meeting.auditoriumId << std::endl;
         }
     }
 };

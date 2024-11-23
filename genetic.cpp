@@ -76,10 +76,10 @@ public:
 
         std::vector<Schedule> sortedSchedules = population.schedules;
 
-        // Sort by best accordances
+        // Sort by best fitnesss
         std::sort(sortedSchedules.begin(), sortedSchedules.end(),
                   [](const Schedule& a, const Schedule& b) {
-                      return a.accordanceValue > b.accordanceValue;
+                      return a.fitnessValue > b.fitnessValue;
                   });
 
         // Select ELITISM_NUM best schedules
@@ -112,29 +112,28 @@ int main() {
     // Main loop
     for (int generation = 0; generation < NUM_GENERATION; ++generation) {
         for (auto& schedule : population.schedules) {
-            schedule.calculateAccordance(data);
+            schedule.calculateFitness(data);
         }
 
-        // Best Schedule from the population by accordance value
+        // Best Schedule from the population by fitness value
         Schedule bestSchedule = *std::max_element(population.schedules.begin(),
                                                     population.schedules.end(),
                                                       [](const Schedule& a, const Schedule& b) {
-                                                          return a.accordanceValue < b.accordanceValue;
+                                                          return a.fitnessValue < b.fitnessValue;
                                                       });
 
-        // Worst Schedule from the population by accordance value
+        // Worst Schedule from the population by fitness value
         Schedule worstSchedule = *std::max_element(population.schedules.begin(),
                                                     population.schedules.end(),
                                                       [](const Schedule& a, const Schedule& b) {
-                                                          return a.accordanceValue > b.accordanceValue;
+                                                          return a.fitnessValue > b.fitnessValue;
                                                       });
 
         // Print final results
-        if (bestSchedule.accordanceValue == 1 || generation==NUM_GENERATION-1){
+        if (bestSchedule.fitnessValue == 1 || generation==NUM_GENERATION-1){
             std::cout << "Generation: " << generation << std::endl;
-            std::cout << "Best Accordance: " << bestSchedule.accordanceValue << std::endl;
-            std::cout << "Worst Accordance: " << worstSchedule.accordanceValue << std::endl;
-            std::cout << "Number of Classes: " << bestSchedule.numClasses << std::endl;
+            std::cout << "Best Fitness: " << bestSchedule.fitnessValue << std::endl;
+            std::cout << "Worst Fitness: " << worstSchedule.fitnessValue << std::endl;
             std::cout << "Number of Conflicts: " << bestSchedule.numConflicts << std::endl;           
 
             // Print some meetings from the best schedule
@@ -148,8 +147,8 @@ int main() {
         if (generation % REPORT_EVERY == 0) {
             std::cout << "Generation: " << generation << std::endl;
 
-            std::cout << "Best Accordance: " << bestSchedule.accordanceValue << std::endl;
-            std::cout << "Worst Accordance: " << worstSchedule.accordanceValue << std::endl;
+            std::cout << "Best Fitness: " << bestSchedule.fitnessValue << std::endl;
+            std::cout << "Worst Fitness: " << worstSchedule.fitnessValue << std::endl;
             std::cout << "Number of Conflicts: " << bestSchedule.numConflicts << std::endl;
 
             std::cout << "--------------------------------------" << std::endl;
@@ -163,7 +162,6 @@ int main() {
 
         // Replace the old population with the new one
         population = newPopulation;
-        
     }
 
     return 0;
